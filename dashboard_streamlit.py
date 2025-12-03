@@ -9,12 +9,16 @@ df_raw = pd.read_csv("chronic_disease_children_trend.csv")
 
 # PREPROCESSING
 df = df_raw.copy()
-numeric_cols = df.select_dtypes(include='number').columns
-df[numeric_cols] = df[numeric_cols].fillna(df[numeric_cols].median())
+features = ['Asthma_Prevalence_pct',
+            'Pneumonia_Prevalence_pct',
+            'Anemia_Prevalence_pct']
+
+# Isi missing value
+df[features] = df[features].fillna(df[features].median())
 
 # STANDARDISASI
 scaler = StandardScaler()
-X_scaled = scaler.fit_transform(df[numeric_cols])
+X_scaled = scaler.fit_transform(df[features])
 
 # CLUSTERING
 k = 4
@@ -40,11 +44,11 @@ st.subheader("Ukuran cluster")
 st.bar_chart(filtered['kmeans_cluster'].value_counts().sort_index())
 
 st.subheader("Profil rata-rata fitur per cluster")
-st.dataframe(filtered.groupby('kmeans_cluster')[numeric_cols].mean())
+st.dataframe(filtered.groupby('kmeans_cluster')[features].mean())
 
 st.subheader("Scatter plot dua fitur")
-x = st.selectbox("X", numeric_cols, index=0)
-y = st.selectbox("Y", numeric_cols, index=1)
+x = st.selectbox("X", features, index=0)
+y = st.selectbox("Y", features, index=1)
 
 df_chart = filtered.copy()
 
