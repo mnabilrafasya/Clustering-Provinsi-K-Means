@@ -86,12 +86,6 @@ for c in sorted(df["Cluster"].unique()):
     for feat in features:
         st.write(f"- {feat.replace('_Prevalence_pct', '')}: {cluster_profile.loc[c, feat]}%")
 
-    # Penyakit dominan
-    dominant = cluster_profile.loc[c].idxmax().replace("_Prevalence_pct", "")
-    value = cluster_profile.loc[c].max()
-    st.write(f"🔥 **Penyakit dominan:** {dominant} ({value}%)")
-    st.write("---")
-
 # SPK - SISTEM PENDUKUNG KEPUTUSAN
 st.subheader("🌍 SPK: Rekomendasi Berdasarkan Provinsi")
 
@@ -112,10 +106,10 @@ st.write(f"### 🏷️ Masuk Cluster **{cl}**")
 def rekomendasi(cluster):
     rules = {
         0: [
-            "Perkuat skrining Hemoglobin (HB) secara berkala di posyandu.",
-            "Tingkatkan edukasi konsumsi makanan kaya zat besi seperti daging, hati, telur, dan sayuran hijau.",
-            "Perbaiki sanitasi dan kebersihan lingkungan untuk mencegah infeksi yang dapat memperburuk anemia.",
-            "Program suplementasi zat besi untuk anak-anak dengan risiko tinggi.",
+            "Lakukan skrining HB rutin setiap 6 bulan di posyandu.",
+            "Perkuat edukasi konsumsi sumber zat besi hewani (daging, hati) dan sayuran hijau.",
+            "Tingkatkan kebersihan & sanitasi untuk mencegah infeksi penyebab anemia.",
+            "Program PMT (Pemberian Makanan Tambahan) ringan untuk anak rentan.",
         ],
         1: [
             "Fokus pada peningkatan asupan gizi mikro seperti zat besi, folat, dan vitamin B12.",
@@ -124,16 +118,16 @@ def rekomendasi(cluster):
             "Dorong diversifikasi pangan lokal yang kaya zat besi dan protein.",
         ],
         2: [
-            "Lakukan pemantauan rutin untuk memastikan prevalensi anemia tetap terkendali.",
-            "Lanjutkan program imunisasi dan PMT sebagai pencegahan jangka panjang.",
-            "Edukasi orang tua mengenai kombinasi makanan tinggi zat besi dan vitamin C.",
-            "Tingkatkan akses makanan bergizi melalui program sekolah dan komunitas.",
+            "Lakukan skrining kualitas udara dalam rumah (ventilasi, asap rokok).",
+            "Program PMT untuk anak berisiko.",
+            "Edukasi manajemen asma (hindari pemicu, inhaler untuk pasien).",
+            "Perbaikan gizi zat besi + vitamin C.",
         ],
         3: [
             "Prioritaskan suplementasi zat besi terjadwal bagi anak usia dini.",
-            "Lakukan skrining HB lebih sering, terutama untuk kelompok berisiko.",
-            "Perkuat intervensi gizi berbasis sekolah seperti PMT dan menu bergizi di PAUD.",
-            "Koordinasi dengan puskesmas untuk penanganan cepat kasus anemia sedang–berat.",
+            "Akselerasi imunisasi PCV untuk mencegah pneumonia berat.",
+            "Intervensi kualitas udara (polusi, kepadatan, ventilasi).",
+            "Deteksi dini ISPA melalui puskesmas/posyandu.",
         ]
     }
     return rules.get(cluster, ["Rekomendasi tidak tersedia."])
@@ -141,3 +135,4 @@ def rekomendasi(cluster):
 st.write("### 🩺 Rekomendasi Kesehatan:")
 for r in rekomendasi(cl):
     st.write("- ", r)
+
