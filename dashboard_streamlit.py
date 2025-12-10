@@ -24,7 +24,7 @@ df[features] = df[features].fillna(df[features].median())
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(df[features])
 
-# CLUSTERING (sesuai rekomendasi: K=3)
+# CLUSTERING (sesuai rekomendasi: K=4)
 k = 4
 km = KMeans(n_clusters=k, random_state=42, n_init=10)
 df["Cluster"] = km.fit_predict(X_scaled)
@@ -87,7 +87,7 @@ for c in sorted(df["Cluster"].unique()):
         st.write(f"- {feat.replace('_Prevalence_pct', '')}: {cluster_profile.loc[c, feat]}%")
 
 # SPK - SISTEM PENDUKUNG KEPUTUSAN
-st.subheader("🌍 SPK: Rekomendasi Berdasarkan Provinsi")
+st.subheader("🌍 SPK: Rekomendasi Berdasarkan Provinsi dan Tahun")
 
 selected_prov = st.selectbox("Pilih Provinsi:", sorted(df["Province"].unique()))
 selected_year = st.selectbox("Pilih Tahun:", sorted(df["Year"].unique()))
@@ -136,3 +136,34 @@ st.write("### 🩺 Rekomendasi Kesehatan:")
 for r in rekomendasi(cl):
     st.write("- ", r)
 
+st.subheader("🧪 SPK: Simulasi Prediksi dari Input Persentase Baru")
+
+input_asma = st.number_input(
+    "Masukkan Persentase Asma (%)", 
+    min_value=0.0, max_value=100.0, value=5.0
+)
+
+input_pneumonia = st.number_input(
+    "Masukkan Persentase Pneumonia (%)", 
+    min_value=0.0, max_value=100.0, value=5.0
+)
+
+input_anemia = st.number_input(
+    "Masukkan Persentase Anemia (%)", 
+    min_value=0.0, max_value=100.0, value=10.0
+)
+
+# Gabungkan input ke array
+input_data = [[input_asma, input_pneumonia, input_anemia]]
+
+# Standarisasi menggunakan scaler yang sama
+input_scaled = scaler.transform(input_data)
+
+# Prediksi cluster dari KMeans
+predicted_cluster = km.predict(input_scaled)[0]
+
+st.write(f"### 🏷️ Prediksi Masuk ke Cluster **{predicted_cluster}**")
+
+st.write("### 🩺 Rekomendasi Kesehatan (Berdasarkan Prediksi):")
+for r in rekomendasi(predicted_cluster):
+    st.write("- ", r)
