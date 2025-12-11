@@ -71,21 +71,6 @@ fig, ax = plt.subplots(figsize=(6,4))
 sns.heatmap(cluster_profile.T, annot=True, cmap="YlOrRd", fmt=".2f", ax=ax)
 st.pyplot(fig)
 
-# INSIGHT CLUSTER
-st.subheader("🧠 Insight Kesehatan per Cluster")
-
-for c in sorted(df["Cluster"].unique()):
-    st.markdown(f"### **Cluster {c}**")
-
-    # Provinsi di cluster ini
-    provs = df[df["Cluster"] == c]["Province"].unique().tolist()
-    st.write("📌 **Provinsi:**", ", ".join(provs))
-
-    # Karakteristik prevalensi
-    st.write("**Karakteristik Prevalensi:**")
-    for feat in features:
-        st.write(f"- {feat.replace('_Prevalence_pct', '')}: {cluster_profile.loc[c, feat]}%")
-
 # SPK - SISTEM PENDUKUNG KEPUTUSAN
 st.subheader("🌍 SPK: Rekomendasi Berdasarkan Provinsi dan Tahun")
 
@@ -167,3 +152,4 @@ st.write(f"### 🏷️ Prediksi Masuk ke Cluster **{predicted_cluster}**")
 st.write("### 🩺 Rekomendasi Kesehatan (Berdasarkan Prediksi):")
 for r in rekomendasi(predicted_cluster):
     st.write("- ", r)
+
